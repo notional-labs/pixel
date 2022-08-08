@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	rpchttp "github.com/tendermint/rpc/client/http"
+	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
 	"github.com/tendermint/tendermint/types"
 )
 
@@ -13,8 +13,8 @@ func errorHandler() {
 	fmt.Printf("error")
 }
 
-func GetWebsocketCLient() {
-	client, err := rpchttp.New("tcp://0.0.0.0:26657", "/websocket") // add juno testnet rpc
+func GetWebsocketClient() {
+	client, err := rpchttp.New("http://95.217.121.243:2071") // add juno testnet rpc
 
 	if err != nil {
 		errorHandler()
@@ -28,7 +28,7 @@ func GetWebsocketCLient() {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	query := "tm.event = 'NewBlock'"
-	txs, err := client.WaitForOneEvent(ctx, "test-client", query)
+	txs, err := client.Subscribe(ctx, "test-client", query)
 	if err != nil {
 		errorHandler()
 	}

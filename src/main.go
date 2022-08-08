@@ -10,6 +10,9 @@ import (
 )
 
 func main() {
+
+	http.HandleFunc("/", controller.GetSocketHandler)
+
 	// route
 	http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello!")
