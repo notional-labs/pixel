@@ -2,63 +2,46 @@ package blockexplore
 
 import (
 	"context"
+	"encoding/hex"
+	"fmt"
 
 	"code.nkcmr.net/async"
 	wasmTypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
-
-	tmtypes "github.com/tendermint/tendermint/types"
 )
 
-func AsyncGetBlockData(node rpcclient.Client, startHeight int, endHeight int) async.Promise[tmtypes.Txs] {
-	return async.NewPromise(func() (tmtypes.Txs, error) {
-		var ans tmtypes.Txs
-		// header -> BlockchainInfo
-		// header, tx -> Block
-		// results -> BlockResults
-		for height := startHeight; height < endHeight; height++ {
-
-			tmp := int64(height)
-			h := &tmp
-
-			res, err := node.Block(context.Background(), h)
-			if err != nil {
-				return nil, err
-			}
-			ans = append(ans, res.Block.Txs...)
-		}
-
-		return ans, nil
+func AsyncGetChuckData(queryClient wasmTypes.QueryClient, chunkX int, chunkY int) async.Promise[chunkData] {
+	return async.NewPromise(func() (chunkData, error) {
+		res := queryContract(queryClient, chunkX, chunkY)
+		// implement here
+		return parseDataFromRes(res), nil
 	})
 }
 
-func getBlocks(node rpcclient.Client, startHeight int, endHeight int, numberProcess int) (tmtypes.Txs, error) {
+func getBlocks(node rpcclient.Client, maxChunkX int, maxChunkY int) ([]chunkData, error) {
 	ctx := context.Background()
+	var ans []chunkData
+	var queryClient wasmTypes.QueryClient
+	var chunkPromisr = make([]async.Promise[chunkData], maxChunkX*maxChunkY)
 
-	var txsPromisr = make([]async.Promise[tmtypes.Txs], numberProcess)
-	var ans tmtypes.Txs
-
-	temp := (endHeight - startHeight) / numberProcess
-
-	for i := 0; i < numberProcess; i++ {
-		if i == numberProcess-1 {
-			txsPromisr[i] = AsyncGetBlockData(node, startHeight+i*temp, endHeight)
+	for y := 0; y <= maxChunkY; y++ {
+		for x := 0; x <= maxChunkX; x++ {
+			chunkPromisr[x+y*maxChunkX] = AsyncGetChuckData(queryClient, x, y)
 		}
-		txsPromisr[i] = AsyncGetBlockData(node, startHeight+i*temp, startHeight+(i+1)*temp)
 	}
 
-	for i := 0; i < numberProcess; i++ {
-		txs, err := txsPromisr[i].Await(ctx)
+	for i := 0; i < maxChunkY*maxChunkY; i++ {
+		chunkData, err := chunkPromisr[i].Await(ctx)
 		if err != nil {
 			return nil, err
 		}
-		ans = append(ans, txs...)
+		ans = append(ans, chunkData)
 	}
 	return ans, nil
 }
 
-func queryContract(queryClient wasmTypes.QueryClient, node rpcclient.Client, chunkX int64, chunkY int64) wasmTypes.QuerySmartContractStateResponse {
+func queryContract(queryClient wasmTypes.QueryClient, chunkX, chunkY int) wasmTypes.QuerySmartContractStateResponse {
 	// TODO: fill query data
 	addressContract := ""
 	res, _ := queryClient.SmartContractState(
@@ -73,6 +56,17 @@ func queryContract(queryClient wasmTypes.QueryClient, node rpcclient.Client, chu
 	return *res
 }
 
-func parseQueryData(chunkX, chunkY int64) []byte {
-	return []byte("")
+func parseQueryData(chunkX, chunkY int) []byte {
+	rawStr := fmt.Sprintf(`{"get_chunk": {"x": %d,"y": %d}}`, chunkX, chunkY)
+	decoder := newArgDecoder(hex.DecodeString)
+	queryData, err := decoder.DecodeString(rawStr)
+	if err != nil {
+		panic(err)
+	}
+	return queryData
+}
+
+func parseDataFromRes(wasmTypes.QuerySmartContractStateResponse) chunkData {
+
+	return chunkData{}
 }
