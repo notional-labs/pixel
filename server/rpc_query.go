@@ -11,8 +11,8 @@ import (
 
 const lengthChunk = 32
 
-func AsyncGetChuckData(queryClient wasmTypes.QueryClient, chunkX int, chunkY int) async.Promise[chunkData] {
-	return async.NewPromise(func() (chunkData, error) {
+func AsyncGetChuckData(queryClient wasmTypes.QueryClient, chunkX int, chunkY int) async.Promise[[]Pixel] {
+	return async.NewPromise(func() ([]Pixel, error) {
 		res := QueryContract(queryClient, chunkX, chunkY)
 		return ParseDataFromRes(res, chunkX, chunkY), nil
 	})
@@ -22,7 +22,7 @@ func GetData(queryClient wasmTypes.QueryClient, maxChunkX int, maxChunkY int) ([
 	ctx := context.Background()
 
 	var ans []Pixel
-	var chunkPromisr = make([]async.Promise[chunkData], maxChunkX*maxChunkY)
+	var chunkPromisr = make([]async.Promise[[]Pixel], maxChunkX*maxChunkY)
 
 	for y := 0; y < maxChunkY; y++ {
 		for x := 0; x < maxChunkX; x++ {
@@ -35,10 +35,10 @@ func GetData(queryClient wasmTypes.QueryClient, maxChunkX int, maxChunkY int) ([
 		if err != nil {
 			return nil, err
 		}
-		if len(data.data) == 0 {
+		if len(data) == 0 {
 			continue
 		}
-		ans = append(ans, data.data...)
+		ans = append(ans, data...)
 	}
 	return ans, nil
 }
@@ -66,7 +66,7 @@ func parseQueryData(chunkX, chunkY int) []byte {
 	return queryData
 }
 
-func ParseDataFromRes(res *wasmTypes.QuerySmartContractStateResponse, chunkX, chunkY int) (ans chunkData) {
+func ParseDataFromRes(res *wasmTypes.QuerySmartContractStateResponse, chunkX, chunkY int) (ans []Pixel) {
 	jsonByte, err := res.Data.MarshalJSON()
 	if err != nil {
 		panic(err)
@@ -88,7 +88,7 @@ func ParseDataFromRes(res *wasmTypes.QuerySmartContractStateResponse, chunkX, ch
 				y:    j + chunkY*lengthChunk,
 				Info: JSONChunkData.Grid[i][j],
 			}
-			ans.data = append(ans.data, pixel)
+			ans = append(ans, pixel)
 		}
 	}
 	return ans
