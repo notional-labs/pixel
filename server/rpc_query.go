@@ -3,26 +3,26 @@ package blockexplore
 import (
 	"context"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 
 	"code.nkcmr.net/async"
 	wasmTypes "github.com/CosmWasm/wasmd/x/wasm/types"
-
-	rpcclient "github.com/tendermint/tendermint/rpc/client"
 )
+
+const lengthChunk = 32
 
 func AsyncGetChuckData(queryClient wasmTypes.QueryClient, chunkX int, chunkY int) async.Promise[chunkData] {
 	return async.NewPromise(func() (chunkData, error) {
 		res := queryContract(queryClient, chunkX, chunkY)
 		// implement here
-		return parseDataFromRes(res), nil
+		return parseDataFromRes(res, chunkX, chunkY), nil
 	})
 }
 
-func getBlocks(node rpcclient.Client, maxChunkX int, maxChunkY int) ([]chunkData, error) {
+func getBlocks(queryClient wasmTypes.QueryClient, maxChunkX int, maxChunkY int) ([]chunkData, error) {
 	ctx := context.Background()
 	var ans []chunkData
-	var queryClient wasmTypes.QueryClient
 	var chunkPromisr = make([]async.Promise[chunkData], maxChunkX*maxChunkY)
 
 	for y := 0; y <= maxChunkY; y++ {
@@ -66,7 +66,22 @@ func parseQueryData(chunkX, chunkY int) []byte {
 	return queryData
 }
 
-func parseDataFromRes(wasmTypes.QuerySmartContractStateResponse) chunkData {
-
-	return chunkData{}
+func parseDataFromRes(res wasmTypes.QuerySmartContractStateResponse, chunkX, chunkY int) (ans chunkData) {
+	jsonByte, _ := res.Data.MarshalJSON()
+	var JSONChunkData JsonChunkData
+	err := json.Unmarshal(jsonByte, &JSONChunkData)
+	if err != nil {
+		panic(err)
+	}
+	for i := range JSONChunkData.grid {
+		for j := range JSONChunkData.grid[i] {
+			pixel := Pixel{
+				x:    i + chunkX*lengthChunk,
+				y:    j + chunkY*lengthChunk,
+				Info: JSONChunkData.grid[i][j],
+			}
+			ans.data = append(ans.data, pixel)
+		}
+	}
+	return ans
 }
