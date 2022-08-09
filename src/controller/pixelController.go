@@ -1,21 +1,14 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
-func GetPixelHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/api/pixels" {
-		http.Error(w, "404 not found.", http.StatusNotFound)
-		return
-	}
-
-	if r.Method != "GET" {
-		http.Error(w, "Method is not supported.", http.StatusNotFound)
-		return
-	}
-
+func GetPixelHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "hello",
+	})
 	// to do add get pixels func
-	fmt.Fprintf(w, "Hello!")
 }

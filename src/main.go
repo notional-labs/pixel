@@ -3,11 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
-	controller "github.com/notionals-lab/pixel/src/controller"
+	"github.com/gin-gonic/gin"
+
+	controller "github.com/notional-labs/pixel/src/controller"
 	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
 )
 
@@ -15,14 +16,14 @@ func errorHandler() {
 	fmt.Printf("error")
 }
 
-func setupRoute() {
+func setupRoute(router *gin.Engine) {
 	// routes
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello!")
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "hello",
+		})
 	})
-
-	http.HandleFunc("/api/pixels", controller.GetPixelHandler)
+	router.GET("/api/pixels/get-chunk", controller.GetPixelHandler)
 }
 
 func main() {
@@ -51,12 +52,11 @@ func main() {
 		// queryClient.AsyncGetChuckData()
 	}()
 
+	router := gin.Default()
+
 	// setup routes
-	setupRoute()
+	setupRoute(router)
 
 	//server listen on port 8080
-	fmt.Printf("Starting server at port 8080\n")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal(err)
-	}
+	router.Run()
 }
