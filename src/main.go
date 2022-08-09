@@ -26,7 +26,6 @@ func setupRoute() {
 }
 
 func main() {
-
 	// websocket
 	client, err := rpchttp.New("http://95.217.121.243:2071", "/websocket")
 
@@ -49,7 +48,7 @@ func main() {
 
 	// todo add save new board state func
 	go func() {
-		// await rpcQuery.AsyncGetBlockData(client, )
+		// queryClient.AsyncGetChuckData()
 	}()
 
 	// setup routes

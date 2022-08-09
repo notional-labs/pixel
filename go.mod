@@ -5,7 +5,6 @@ go 1.18
 require (
 	code.nkcmr.net/async v0.0.2
 	github.com/CosmWasm/wasmd v0.27.0
-	github.com/tendermint/tendermint v0.34.19
 )
 
 require (
@@ -102,6 +101,7 @@ require (
 	github.com/petermattis/goid v0.0.0-20180202154549-b0b1615b78e5 // indirect
 	github.com/rs/zerolog v1.27.0 // indirect
 	github.com/sasha-s/go-deadlock v0.2.1-0.20190427202633-1595213edefa // indirect
+	github.com/tendermint/tendermint v0.34.19
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
 	golang.org/x/net v0.0.0-20220617184016-355a448f1bc9 // indirect
 	golang.org/x/sys v0.0.0-20220702020025-31831981b65f // indirect
