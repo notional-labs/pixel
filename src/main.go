@@ -1,17 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
-
-	"context"
 	"time"
 
 	controller "github.com/notionals-lab/pixel/src/controller"
-
 	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
-	"github.com/tendermint/tendermint/types"
 )
 
 func errorHandler() {
@@ -45,15 +42,14 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	query := "tm.event = 'NewBlock'"
-	txs, err := client.Subscribe(ctx, "test-client", query)
-	if err != nil {
+	_, envErr := client.Subscribe(ctx, "test-client", query)
+	if envErr != nil {
 		errorHandler()
 	}
 
+	// todo add save new board state func
 	go func() {
-		for e := range txs {
-			fmt.Println("got ", e.Data.(types.EventDataNewBlock))
-		}
+		// await rpcQuery.AsyncGetBlockData(client, )
 	}()
 
 	// setup routes
