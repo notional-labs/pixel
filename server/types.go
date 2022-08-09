@@ -1,14 +1,19 @@
-package blockexplore
+package server
 
-type pixel struct {
-	x        int
-	y        int
-	addresss string
-	color    int
+type Pixel struct {
+	x    int
+	y    int
+	Info PixelInfo
 }
 
 type chunkData struct {
-	chunkX int
-	chunkY int
-	data   []pixel
+	data []Pixel
+}
+
+type PixelInfo struct {
+	Color   uint8  `json:"color"`
+	Painter string `json:"painter"`
+}
+type JsonChunkData struct {
+	Grid [][]PixelInfo `json:"grid"`
 }

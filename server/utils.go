@@ -1,4 +1,4 @@
-package blockexplore
+package server
 
 import (
 	"encoding/base64"
