@@ -24,7 +24,7 @@ func setupRoute(router *gin.Engine) {
 			"message": "hello",
 		})
 	})
-	router.GET("/api/pixels/get-chunk/:x/:y", controller.GetPixelHandler)
+	router.GET("/api/pixels/get-chunk", controller.GetPixelHandler)
 }
 
 func ListenAndServe(queryClient wasmTypes.QueryClient) {

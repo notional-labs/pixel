@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/notional-labs/pixel/server"
@@ -12,18 +11,6 @@ import (
 )
 
 func GetPixelHandler(c *gin.Context) {
-	//get params
-	x := c.Param("x")
-	y := c.Param("y")
-
-	chunkX, xErr := strconv.ParseInt(x, 0, 64)
-	chunkY, yErr := strconv.ParseInt(y, 0, 64)
-	if xErr != nil || yErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "invalid form for parameter",
-		})
-	}
-
 	node, err := client.NewClientFromNode("http://95.217.121.243:2071")
 
 	if err != nil {
@@ -37,7 +24,7 @@ func GetPixelHandler(c *gin.Context) {
 
 	queryClient := wasmTypes.NewQueryClient(clientCtx)
 
-	data, err := server.GetData(queryClient, int(chunkX), int(chunkY))
+	data, err := server.GetData(queryClient, 11, 11)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
