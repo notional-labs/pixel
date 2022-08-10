@@ -1,4 +1,4 @@
-package main
+package serve
 
 import (
 	"context"
@@ -7,7 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	controller "github.com/notionals-lab/pixel/src/controller"
+	wasmTypes "github.com/CosmWasm/wasmd/x/wasm/types"
+
+	controller "github.com/notional-labs/pixel/server/serve/controller"
 	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
 )
 
@@ -25,16 +27,18 @@ func setupRoute() {
 	http.HandleFunc("/api/pixels", controller.GetPixelHandler)
 }
 
-func main() {
+func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	// websocket
 	client, err := rpchttp.New("http://95.217.121.243:2071", "/websocket")
 
 	if err != nil {
+		fmt.Println(err)
 		errorHandler()
 	}
 
 	err = client.Start()
 	if err != nil {
+		fmt.Println(err)
 		errorHandler()
 	}
 	defer client.Stop()
@@ -45,11 +49,6 @@ func main() {
 	if envErr != nil {
 		errorHandler()
 	}
-
-	// todo add save new board state func
-	go func() {
-		// queryClient.AsyncGetChuckData()
-	}()
 
 	// setup routes
 	setupRoute()
