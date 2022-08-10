@@ -18,6 +18,7 @@ func main() {
 
 	rootCmd.AddCommand(
 		QueryCmd(),
+		RunCmd(),
 	)
 
 	if err := rootCmd.Execute(); err != nil {

@@ -1,4 +1,4 @@
-package main
+package serve
 
 import (
 	"context"
@@ -6,9 +6,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
+	wasmTypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
-	controller "github.com/notional-labs/pixel/src/controller"
+	"github.com/gin-gonic/gin"
+	controller "github.com/notional-labs/pixel/server/serve/controller"
 	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
 )
 
@@ -26,16 +27,18 @@ func setupRoute(router *gin.Engine) {
 	router.GET("/api/pixels/get-chunk", controller.GetPixelHandler)
 }
 
-func main() {
+func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	// websocket
 	client, err := rpchttp.New("http://95.217.121.243:2071", "/websocket")
 
 	if err != nil {
+		fmt.Println(err)
 		errorHandler()
 	}
 
 	err = client.Start()
 	if err != nil {
+		fmt.Println(err)
 		errorHandler()
 	}
 	defer client.Stop()
@@ -46,7 +49,6 @@ func main() {
 	if envErr != nil {
 		errorHandler()
 	}
-
 	// todo add save new board state func
 	go func() {
 		// queryClient.AsyncGetChuckData()

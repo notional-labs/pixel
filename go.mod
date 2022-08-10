@@ -11,7 +11,7 @@ require (
 
 require (
 	github.com/google/go-cmp v0.5.8 // indirect
-	github.com/rogpeppe/go-internal v1.8.0 // indirect
+	github.com/rogpeppe/go-internal v1.6.2 // indirect
 )
 
 require (
