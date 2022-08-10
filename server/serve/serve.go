@@ -24,7 +24,7 @@ func setupRoute(router *gin.Engine) {
 			"message": "hello",
 		})
 	})
-	router.GET("/api/pixels/get-chunk", controller.GetPixelHandler)
+	router.GET("/api/pixels/get-chunk/:x/:y", controller.GetPixelHandler)
 }
 
 func ListenAndServe(queryClient wasmTypes.QueryClient) {
@@ -55,6 +55,9 @@ func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	}()
 
 	router := gin.Default()
+
+	// recover from panic, return 500 err instead
+	router.Use(gin.Recovery())
 
 	// setup routes
 	setupRoute(router)

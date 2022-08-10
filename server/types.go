@@ -3,7 +3,7 @@ package server
 type Pixel struct {
 	x    int
 	y    int
-	Info PixelInfo
+	Info PixelInfo `json:"info"`
 }
 
 type chunkData struct {
