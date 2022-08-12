@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -25,7 +26,7 @@ func GetPixelHandler(c *gin.Context) {
 	queryClient := wasmTypes.NewQueryClient(clientCtx)
 
 	data, err := server.GetData(queryClient, 11, 11)
-
+	fmt.Println(data)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Cannot fetch data",

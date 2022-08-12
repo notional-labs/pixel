@@ -63,5 +63,5 @@ func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	setupRoute(router)
 
 	//server listen on port 8080
-	router.Run()
+	router.Run(":1562")
 }
