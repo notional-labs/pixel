@@ -11,7 +11,7 @@ import (
 )
 
 func GetPixelHandler(c *gin.Context) {
-	node, err := client.NewClientFromNode("http://95.217.121.243:2071")
+	node, err := client.NewClientFromNode("https://rpc.uni.junonetwork.io:443")
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -20,7 +20,7 @@ func GetPixelHandler(c *gin.Context) {
 	}
 
 	clientCtx := client.Context{}
-	clientCtx = clientCtx.WithClient(node).WithNodeURI("http://95.217.121.243:2071")
+	clientCtx = clientCtx.WithClient(node).WithNodeURI("https://rpc.uni.junonetwork.io:443")
 
 	queryClient := wasmTypes.NewQueryClient(clientCtx)
 
