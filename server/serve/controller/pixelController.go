@@ -34,7 +34,7 @@ func GetNewBlockHandler() {
 	queryClient := wasmTypes.NewQueryClient(clientCtx)
 
 	data, err := server.GetData(queryClient, 11, 11)
-
+	fmt.Println(data)
 	if err != nil {
 		fmt.Printf("")
 	}

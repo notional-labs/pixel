@@ -26,7 +26,7 @@ func setupRoute(router *gin.Engine) {
 			"message": "hello",
 		})
 	})
-	router.GET("/api/pixels/get-chunk", controller.GetPixelHandler)
+	router.GET("/api/pixels", controller.GetPixelHandler)
 }
 
 func ListenAndServe(queryClient wasmTypes.QueryClient) {
@@ -70,6 +70,6 @@ func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	// setup routes
 	setupRoute(router)
 
-	//server listen on port 8080
-	router.Run(":3000")
+	//server listen on port
+	router.Run(":1562")
 }

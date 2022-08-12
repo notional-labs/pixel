@@ -1,13 +1,19 @@
 package server
 
 type Pixel struct {
-	x    int
-	y    int
-	Info PixelInfo `json:"info"`
+	X     int
+	Y     int
+	Color uint8 `json:"color"`
 }
 
 type chunkData struct {
-	data []Pixel
+	Data []Pixel `json:"data"`
+}
+
+type Result struct {
+	X     uint8 `json:"x"`
+	Y     uint8 `json:"y"`
+	Color uint8 `json:"color"`
 }
 
 type PixelInfo struct {
