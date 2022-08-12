@@ -8,7 +8,9 @@ import (
 
 	wasmTypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+
 	controller "github.com/notional-labs/pixel/server/serve/controller"
 	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
 )
@@ -29,7 +31,7 @@ func setupRoute(router *gin.Engine) {
 
 func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	// websocket
-	client, err := rpchttp.New("https://rpc.uni.junonetwork.io:443", "/websocket")
+	client, err := rpchttp.New("tcp://0.0.0.0:36657", "/websocket")
 
 	if err != nil {
 		fmt.Println(err)
@@ -51,11 +53,16 @@ func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	}
 	// todo add save new board state func
 	go func() {
-		fmt.Printf("new block!")
-		controller.GetNewBlockHandler()
+		fmt.Print("new block")
+		// controller.GetNewBlockHandler()
 	}()
 
 	router := gin.New()
+
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+
+	router.Use(cors.New(config))
 
 	// recover from panic, return 500 err instead
 	router.Use(gin.Recovery())
