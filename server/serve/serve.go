@@ -51,10 +51,11 @@ func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	}
 	// todo add save new board state func
 	go func() {
-		// queryClient.AsyncGetChuckData()
+		fmt.Printf("new block!")
+		controller.GetNewBlockHandler()
 	}()
 
-	router := gin.Default()
+	router := gin.New()
 
 	// recover from panic, return 500 err instead
 	router.Use(gin.Recovery())
@@ -63,5 +64,5 @@ func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	setupRoute(router)
 
 	//server listen on port 8080
-	router.Run()
+	router.Run(":3000")
 }
