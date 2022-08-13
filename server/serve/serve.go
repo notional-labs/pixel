@@ -3,7 +3,6 @@ package serve
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"time"
 
 	wasmTypes "github.com/CosmWasm/wasmd/x/wasm/types"
@@ -13,6 +12,7 @@ import (
 
 	controller "github.com/notional-labs/pixel/server/serve/controller"
 	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
+	"github.com/tendermint/tendermint/types"
 )
 
 func errorHandler() {
@@ -21,17 +21,12 @@ func errorHandler() {
 
 func setupRoute(router *gin.Engine) {
 	// routes
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "hello",
-		})
-	})
 	router.GET("/api/pixels", controller.GetPixelHandler)
 }
 
 func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	// websocket
-	client, err := rpchttp.New("tcp://0.0.0.0:36657", "/websocket")
+	client, err := rpchttp.New("https://rpc.uni.junonetwork.io:443", "/websocket")
 
 	if err != nil {
 		fmt.Println(err)
@@ -47,14 +42,16 @@ func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	query := "tm.event = 'NewBlock'"
-	_, envErr := client.Subscribe(ctx, "test-client", query)
+	txs, envErr := client.Subscribe(ctx, "client", query)
 	if envErr != nil {
 		errorHandler()
 	}
-	// todo add save new board state func
+
 	go func() {
-		fmt.Print("new block")
-		// controller.GetNewBlockHandler()
+		for e := range txs {
+			fmt.Println("got ", e.Data.(types.EventDataTx))
+			controller.GetNewBlockHandler()
+		}
 	}()
 
 	router := gin.New()

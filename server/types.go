@@ -6,7 +6,7 @@ type Pixel struct {
 	Color uint8 `json:"color"`
 }
 
-type chunkData struct {
+type ChunkData struct {
 	Data []Pixel `json:"data"`
 }
 

@@ -16,8 +16,27 @@ import (
 )
 
 func GetPixelHandler(c *gin.Context) {
+	// print board
+	var buffer bytes.Buffer
+	var b []byte
+	var err error
+
+	for _, item := range global.GetBoard() {
+		b, err = json.Marshal(item)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": err.Error(),
+			})
+		}
+
+		buffer.WriteString(string(b) + ",")
+	}
+
+	s := strings.TrimSpace(buffer.String())
+	// trim last comma
+
 	c.JSON(http.StatusOK, gin.H{
-		"data": global.Board,
+		"data": s,
 	})
 }
 
@@ -34,28 +53,8 @@ func GetNewBlockHandler() {
 	queryClient := wasmTypes.NewQueryClient(clientCtx)
 
 	data, err := server.GetData(queryClient, 11, 11)
-	fmt.Println(data)
-	if err != nil {
-		fmt.Printf("")
-	}
 
-	var buffer bytes.Buffer
-	var b []byte
+	global.SetBoard(data)
 
-	for _, item := range data {
-		b, err = json.Marshal(item)
-		if err != nil {
-			fmt.Printf("")
-		}
-
-		buffer.WriteString(string(b) + ",")
-	}
-
-	s := strings.TrimSpace(buffer.String())
-	// trim last comma
-	s = s[:len(s)-1]
-
-	fmt.Printf(s)
-
-	copy(data, global.Board)
+	fmt.Printf("%v", global.GetBoard())
 }
