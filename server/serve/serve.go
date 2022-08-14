@@ -12,7 +12,6 @@ import (
 
 	controller "github.com/notional-labs/pixel/server/serve/controller"
 	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
-	"github.com/tendermint/tendermint/types"
 )
 
 func errorHandler() {
@@ -26,7 +25,7 @@ func setupRoute(router *gin.Engine) {
 
 func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	// websocket
-	client, err := rpchttp.New("https://rpc.uni.junonetwork.io:443", "/websocket")
+	client, err := rpchttp.New("http://95.217.121.243:2071", "/websocket")
 
 	if err != nil {
 		fmt.Println(err)
@@ -48,8 +47,7 @@ func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	}
 
 	go func() {
-		for e := range txs {
-			fmt.Println("got ", e.Data.(types.EventDataTx))
+		for range txs {
 			controller.GetNewBlockHandler()
 		}
 	}()
@@ -68,5 +66,5 @@ func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	setupRoute(router)
 
 	//server listen on port
-	router.Run(":1562")
+	router.Run(":8080")
 }

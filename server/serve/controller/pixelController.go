@@ -20,8 +20,9 @@ func GetPixelHandler(c *gin.Context) {
 	var buffer bytes.Buffer
 	var b []byte
 	var err error
+	board := global.GetBoard()
 
-	for _, item := range global.GetBoard() {
+	for _, item := range board {
 		b, err = json.Marshal(item)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -41,14 +42,14 @@ func GetPixelHandler(c *gin.Context) {
 }
 
 func GetNewBlockHandler() {
-	node, err := client.NewClientFromNode("https://rpc.uni.junonetwork.io:443")
+	node, err := client.NewClientFromNode("http://95.217.121.243:2071")
 
 	if err != nil {
 		return
 	}
 
 	clientCtx := client.Context{}
-	clientCtx = clientCtx.WithClient(node).WithNodeURI("https://rpc.uni.junonetwork.io:443")
+	clientCtx = clientCtx.WithClient(node).WithNodeURI("http://95.217.121.243:2071")
 
 	queryClient := wasmTypes.NewQueryClient(clientCtx)
 
