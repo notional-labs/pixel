@@ -6,10 +6,6 @@ type Pixel struct {
 	Color uint8 `json:"color"`
 }
 
-type ChunkData struct {
-	Data []Pixel `json:"data"`
-}
-
 type Result struct {
 	X     uint8 `json:"x"`
 	Y     uint8 `json:"y"`

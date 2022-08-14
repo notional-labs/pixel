@@ -3,7 +3,6 @@ package controller
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -56,6 +55,4 @@ func GetNewBlockHandler() {
 	data, err := server.GetData(queryClient, 11, 11)
 
 	global.SetBoard(data)
-
-	fmt.Printf("%v", global.GetBoard())
 }
