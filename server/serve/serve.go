@@ -23,9 +23,9 @@ func setupRoute(router *gin.Engine) {
 	router.GET("/api/pixels", controller.GetPixelHandler)
 }
 
-func ListenAndServe(queryClient wasmTypes.QueryClient) {
+func ListenAndServe(queryClient wasmTypes.QueryClient, port string) {
 	// websocket
-	client, err := rpchttp.New("https://rpc.uni.junonetwork.io:443", "/websocket")
+	client, err := rpchttp.New("http://95.217.121.243:2071", "/websocket")
 
 	if err != nil {
 		fmt.Println(err)
@@ -66,5 +66,5 @@ func ListenAndServe(queryClient wasmTypes.QueryClient) {
 	setupRoute(router)
 
 	//server listen on port
-	router.Run(":8080")
+	router.Run(":" + port)
 }
