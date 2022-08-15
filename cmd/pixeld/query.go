@@ -45,7 +45,7 @@ func RunCmd() *cobra.Command {
 			clientCtx = clientCtx.WithClient(node).WithNodeURI("http://95.217.121.243:2071")
 
 			queryClient := wasmTypes.NewQueryClient(clientCtx)
-			serve.ListenAndServe(queryClient)
+			serve.ListenAndServe(queryClient, args[0])
 
 			return nil
 		},
