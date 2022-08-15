@@ -84,8 +84,8 @@ func ParseDataFromRes(res *wasmTypes.QuerySmartContractStateResponse, chunkX, ch
 				continue
 			}
 			pixel := Pixel{
-				x:    j + chunkX*lengthChunk,
-				y:    i + chunkY*lengthChunk,
+				X:     j + chunkX*lengthChunk,
+				Y:     i + chunkY*lengthChunk,
 				Color: JSONChunkData.Grid[i][j].Color,
 			}
 			ans = append(ans, pixel)
