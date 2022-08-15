@@ -93,3 +93,15 @@ func ParseDataFromRes(res *wasmTypes.QuerySmartContractStateResponse, chunkX, ch
 	}
 	return ans
 }
+
+func ParsePixelArray(pixelArray []Pixel) map[int]([]map[int]uint8) {
+	ans := make(map[int]([]map[int]uint8))
+
+	for _, pixel := range pixelArray {
+		newPixel := make(map[int]uint8)
+		newPixel[pixel.Y] = pixel.Color
+		ans[pixel.X] = append(ans[pixel.X], newPixel)
+	}
+
+	return ans
+}

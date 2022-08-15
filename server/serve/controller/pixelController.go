@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,9 +13,9 @@ import (
 
 func GetPixelHandler(c *gin.Context) {
 	board := global.GetBoard()
-
+	ans := server.ParsePixelArray(board)
 	c.JSON(http.StatusOK, gin.H{
-		"data": board,
+		"data": ans,
 	})
 }
 
@@ -33,6 +32,5 @@ func GetNewBlockHandler() {
 	queryClient := wasmTypes.NewQueryClient(clientCtx)
 
 	data, err := server.GetData(queryClient, 11, 11)
-	fmt.Println(data)
 	global.SetBoard(data)
 }

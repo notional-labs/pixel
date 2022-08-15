@@ -25,7 +25,7 @@ func QueryCmd() *cobra.Command {
 
 			queryClient := wasmTypes.NewQueryClient(clientCtx)
 			data, _ := server.GetData(queryClient, 11, 11)
-			fmt.Println(data)
+			fmt.Println(server.ParsePixelArray(data))
 			fmt.Println(time.Now().Sub(now))
 			return nil
 		},
