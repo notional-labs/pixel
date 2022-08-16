@@ -7,6 +7,7 @@ import (
 
 	wasmTypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	controller "github.com/notional-labs/pixel/server/serve/controller"
@@ -52,6 +53,18 @@ func ListenAndServe(queryClient wasmTypes.QueryClient, port string) {
 	}()
 
 	router := gin.New()
+
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"https://nopixels-camel.netlify.app"},
+		AllowMethods:     []string{"GET"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "https://github.com"
+		},
+		MaxAge: 12 * time.Hour,
+	}))
 
 	// recover from panic, return 500 err instead
 	router.Use(gin.Recovery())
