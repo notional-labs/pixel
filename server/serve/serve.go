@@ -52,7 +52,7 @@ func ListenAndServe(queryClient wasmTypes.QueryClient, port string) {
 		}
 	}()
 
-	router := gin.New()
+	router := gin.Default()
 
 	router.Use(cors.Default())
 
