@@ -55,7 +55,7 @@ func ListenAndServe(queryClient wasmTypes.QueryClient, port string) {
 	router := gin.New()
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://nopixels-camel.netlify.app"},
+		AllowOrigins:     []string{""},
 		AllowMethods:     []string{"GET"},
 		AllowHeaders:     []string{"Origin"},
 		ExposeHeaders:    []string{"Content-Length"},
