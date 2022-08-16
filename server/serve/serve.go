@@ -7,7 +7,6 @@ import (
 
 	wasmTypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	controller "github.com/notional-labs/pixel/server/serve/controller"
@@ -53,11 +52,6 @@ func ListenAndServe(queryClient wasmTypes.QueryClient, port string) {
 	}()
 
 	router := gin.New()
-
-	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
-
-	router.Use(cors.New(config))
 
 	// recover from panic, return 500 err instead
 	router.Use(gin.Recovery())
