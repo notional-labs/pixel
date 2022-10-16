@@ -25,7 +25,7 @@ func setupRoute(router *gin.Engine) {
 
 func ListenAndServe(queryClient wasmTypes.QueryClient, port string) {
 	// websocket
-	client, err := rpchttp.New("http://95.217.121.243:2071", "/websocket")
+	client, err := rpchttp.New("95.217.121.243:2071", "/websocket")
 
 	if err != nil {
 		fmt.Println(err)

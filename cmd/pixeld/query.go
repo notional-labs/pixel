@@ -18,9 +18,9 @@ func QueryCmd() *cobra.Command {
 		Short: "query",
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			node, _ := client.NewClientFromNode("http://95.217.121.243:2071")
+			node, _ := client.NewClientFromNode("95.217.121.243:2071")
 			clientCtx := client.Context{}
-			clientCtx = clientCtx.WithClient(node).WithNodeURI("http://95.217.121.243:2071")
+			clientCtx = clientCtx.WithClient(node).WithNodeURI("95.217.121.243:2071")
 			now := time.Now()
 
 			queryClient := wasmTypes.NewQueryClient(clientCtx)
@@ -40,9 +40,9 @@ func RunCmd() *cobra.Command {
 		Short: "query",
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			node, _ := client.NewClientFromNode("http://95.217.121.243:2071")
+			node, _ := client.NewClientFromNode("95.217.121.243:2071")
 			clientCtx := client.Context{}
-			clientCtx = clientCtx.WithClient(node).WithNodeURI("http://95.217.121.243:2071")
+			clientCtx = clientCtx.WithClient(node).WithNodeURI("95.217.121.243:2071")
 
 			queryClient := wasmTypes.NewQueryClient(clientCtx)
 			serve.ListenAndServe(queryClient, args[0])
