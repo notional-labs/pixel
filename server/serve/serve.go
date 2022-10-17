@@ -25,14 +25,12 @@ func setupRoute(router *gin.Engine) {
 
 func ListenAndServe(queryClient wasmTypes.QueryClient, port string) {
 	// websocket
-	client, err := rpchttp.New("http://95.217.121.243:2071", "/websocket")
+	client, err := rpchttp.New("https://juno-testnet-rpc.polkachu.com:443", "/websocket")
 
 	if err != nil {
 		fmt.Println(err)
 		errorHandler()
 	}
-
-	controller.GetNewBlockHandler()
 
 	err = client.Start()
 	if err != nil {
@@ -43,14 +41,13 @@ func ListenAndServe(queryClient wasmTypes.QueryClient, port string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	query := "tm.event = 'NewBlock'"
-
 	txs, envErr := client.Subscribe(ctx, "client", query)
 	if envErr != nil {
 		errorHandler()
 	}
 
 	go func() {
-		if len(txs) > 0 {
+		for range txs {
 			controller.GetNewBlockHandler()
 		}
 	}()
