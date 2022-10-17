@@ -31,7 +31,6 @@ func ListenAndServe(queryClient wasmTypes.QueryClient, port string) {
 		fmt.Println(err)
 		errorHandler()
 	}
-
 	err = client.Start()
 	if err != nil {
 		fmt.Println(err)
@@ -45,6 +44,7 @@ func ListenAndServe(queryClient wasmTypes.QueryClient, port string) {
 	if envErr != nil {
 		errorHandler()
 	}
+	controller.GetNewBlockHandler()
 
 	go func() {
 		for range txs {
