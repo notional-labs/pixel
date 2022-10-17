@@ -67,13 +67,13 @@ func parseQueryData(chunkX, chunkY int) []byte {
 }
 
 func ParseDataFromRes(res *wasmTypes.QuerySmartContractStateResponse, chunkX, chunkY int) (ans []Pixel) {
-	jsonByte, err := res.Data.MarshalJSON()
-	if err != nil {
-		panic(err)
+	var jsonByte []byte
+	if res != nil {
+		jsonByte, _ = res.Data.MarshalJSON()
 	}
 
 	var JSONChunkData JsonChunkData
-	err = json.Unmarshal(jsonByte, &JSONChunkData)
+	err := json.Unmarshal(jsonByte, &JSONChunkData)
 	if err != nil {
 		panic(err)
 	}
