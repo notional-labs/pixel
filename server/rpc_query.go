@@ -44,7 +44,7 @@ func GetData(queryClient wasmTypes.QueryClient, maxChunkX int, maxChunkY int) ([
 }
 
 func QueryContract(queryClient wasmTypes.QueryClient, chunkX, chunkY int) *wasmTypes.QuerySmartContractStateResponse {
-	addressContract := "juno10wexa0eluuqgmur6n2zpg7xtddvl5phjj8vk7jw9qcwg822k6pzqdrham8"
+	addressContract := "juno13jr4jmz2pu5vu7avejy20s583rvpmp5ctmhzjpjhygqnxg5h5rzsk70cng"
 	res, _ := queryClient.SmartContractState(
 		context.Background(),
 		&wasmTypes.QuerySmartContractStateRequest{
