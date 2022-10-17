@@ -32,6 +32,8 @@ func ListenAndServe(queryClient wasmTypes.QueryClient, port string) {
 		errorHandler()
 	}
 
+	controller.GetNewBlockHandler()
+
 	err = client.Start()
 	if err != nil {
 		fmt.Println(err)
@@ -41,6 +43,7 @@ func ListenAndServe(queryClient wasmTypes.QueryClient, port string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	query := "tm.event = 'NewBlock'"
+
 	txs, envErr := client.Subscribe(ctx, "client", query)
 	if envErr != nil {
 		errorHandler()
