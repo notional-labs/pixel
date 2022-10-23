@@ -20,14 +20,14 @@ func GetPixelHandler(c *gin.Context) {
 }
 
 func GetNewBlockHandler() {
-	node, err := client.NewClientFromNode("http://95.217.121.243:2071")
+	node, err := client.NewClientFromNode("http://95.217.121.243:2081")
 
 	if err != nil {
 		return
 	}
 
 	clientCtx := client.Context{}
-	clientCtx = clientCtx.WithClient(node).WithNodeURI("http://95.217.121.243:2071")
+	clientCtx = clientCtx.WithClient(node).WithNodeURI("http://95.217.121.243:2081")
 
 	queryClient := wasmTypes.NewQueryClient(clientCtx)
 
