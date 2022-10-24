@@ -73,10 +73,7 @@ func ParseDataFromRes(res *wasmTypes.QuerySmartContractStateResponse, chunkX, ch
 	}
 
 	var JSONChunkData JsonChunkData
-	err := json.Unmarshal(jsonByte, &JSONChunkData)
-	if err != nil {
-		panic(err)
-	}
+	json.Unmarshal(jsonByte, &JSONChunkData)
 
 	for i := range JSONChunkData.Grid {
 		for j := range JSONChunkData.Grid[i] {
